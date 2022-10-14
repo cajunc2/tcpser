@@ -308,7 +308,7 @@ int mdm_connect(modem_config *cfg)
 void mdm_play_handshake_sound(modem_config *cfg)
 {
   if(cfg->speaker_setting == 0) {
-    return 0;
+    return;
   }
   int speed;
 
