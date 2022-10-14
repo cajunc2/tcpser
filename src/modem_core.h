@@ -163,6 +163,7 @@ int mdm_off_hook(modem_config *cfg);
 int mdm_answer(modem_config *cfg);
 int mdm_print_speed(modem_config *cfg);
 int mdm_connect(modem_config *cfg);
+void mdm_play_handshake_sound(modem_config *cfg);
 int mdm_listen(modem_config *cfg);
 int mdm_disconnect(modem_config *cfg);
 int mdm_parse_cmd(modem_config *cfg);
