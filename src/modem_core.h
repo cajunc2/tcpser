@@ -141,6 +141,7 @@ typedef struct modem_config {
   int response_code_level;
   int send_responses;
   int text_responses;
+  int speaker_setting;
   int echo;
   int s[100];
   int break_len;

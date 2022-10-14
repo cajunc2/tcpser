@@ -126,6 +126,8 @@ void mdm_init_config(modem_config *cfg)
   cfg->config0[0] = '\0';
   cfg->config1[0] = '\0';
 
+  cfg->speaker_setting = 1;
+
   dce_init_config(cfg);
   sh_init_config(cfg);
 }
@@ -288,6 +290,10 @@ int mdm_connect(modem_config *cfg)
   if (cfg->conn_type == MDM_CONN_NONE) {
     if (line_connect(cfg) == 0) {
       cfg->conn_type = MDM_CONN_OUTGOING;
+
+      // TODO: play dial/handshake sound here
+      mdm_play_handshake_sound(cfg);
+
       mdm_set_control_lines(cfg);
       mdm_print_speed(cfg);
     }
@@ -297,6 +303,37 @@ int mdm_connect(modem_config *cfg)
     }
   }
   return 0;
+}
+
+void mdm_play_handshake_sound(modem_config *cfg)
+{
+  if(cfg->speaker_setting == 0) {
+    return 0;
+  }
+  int speed;
+
+
+  switch (cfg->connect_response) {
+    case 2:
+      speed = cfg->dte_speed;
+      break;
+    default:
+      speed = cfg->dce_speed;
+      break;
+  }
+
+  switch (speed) {
+    case 921600:
+    case 460800:
+    case 230400:
+    case 115200:
+    case 57600:
+    case 38400:
+      system("/usr/bin/aplay /home/mmartin/hsk_fast.wav 2> /dev/null");
+      return;
+  }
+
+  system("/usr/bin/aplay /home/mmartin/hsk_slow.wav 2> /dev/null");
 }
 
 int mdm_listen(modem_config *cfg)
@@ -446,7 +483,7 @@ int mdm_parse_cmd(modem_config *cfg)
       if (num > 3)
         cmd = AT_CMD_ERR;
       else {
-        //cfg->speaker_setting=num;
+        cfg->speaker_setting=num;
       }
       break;
     case 'N':  // automode negotiate
