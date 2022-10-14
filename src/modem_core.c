@@ -288,11 +288,9 @@ int mdm_connect(modem_config *cfg)
 {
   mdm_off_hook(cfg);
   if (cfg->conn_type == MDM_CONN_NONE) {
+    mdm_play_handshake_sound(cfg);
     if (line_connect(cfg) == 0) {
       cfg->conn_type = MDM_CONN_OUTGOING;
-
-      // TODO: play dial/handshake sound here
-      mdm_play_handshake_sound(cfg);
 
       mdm_set_control_lines(cfg);
       mdm_print_speed(cfg);
